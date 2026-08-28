@@ -11,7 +11,7 @@ import helper
 import numpy as np
 
 
-
+   
 
 UMBRAL = 0.8
 
