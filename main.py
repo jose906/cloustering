@@ -606,10 +606,13 @@ if __name__ == "__main__":
     df_no_asignados = classify_tweets()
     df_clusters = detectar_nuevos_clusters(df_no_asignados)
     centroides_nuevos = calcular_centroides_nuevos(df_clusters)
-    topics_existentes = get_topic_embeddings()
+    if len(centroides_nuevos.groupby("cluster")) < 5 :
+        print("No hay centroides nuevos para comparar")
+    else:
+        topics_existentes = get_topic_embeddings()
 
-    df_comparacion = comparar_centroides_con_topics(centroides_nuevos,topics_existentes,umbral=UMBRAL)
-    df_asignaciones_clusters = preparar_clusters_similares(df_clusters,df_comparacion)
-    insert_tweets_topic(df_asignaciones_clusters)
-    df_topics_nuevos = df_comparacion[df_comparacion["es_nuevo"] == True].copy()
-    topics_creados = crear_todos_los_topics_nuevos( df_topics_nuevos=df_topics_nuevos,centroides_nuevos=centroides_nuevos,   df_clusters=df_clusters)
+        df_comparacion = comparar_centroides_con_topics(centroides_nuevos,topics_existentes,umbral=UMBRAL)
+        df_asignaciones_clusters = preparar_clusters_similares(df_clusters,df_comparacion)
+        insert_tweets_topic(df_asignaciones_clusters)
+        df_topics_nuevos = df_comparacion[df_comparacion["es_nuevo"] == True].copy()
+        topics_creados = crear_todos_los_topics_nuevos( df_topics_nuevos=df_topics_nuevos,centroides_nuevos=centroides_nuevos,   df_clusters=df_clusters)

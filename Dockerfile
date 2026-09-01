@@ -1,6 +1,6 @@
 FROM python:3.10-slim
 
-# Instalar dependencias del sistema requeridas por UMAP y HDBSCAN
+# Dependencias del sistema requeridas por UMAP y HDBSCAN
 RUN apt-get update && apt-get install -y \
     build-essential \
     python3-dev \
@@ -8,12 +8,13 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copiar dependencias e instalarlas
+# Instalar dependencias Python
 COPY requirements.txt .
+
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar el código fuente (main.py, helper.py, etc.)
+# Copiar código
 COPY . .
 
-# Comando predeterminado (GCP lo sobrescribirá con "python" "main.py")
+# Ejecutar el procesamiento cuando se inicie el Job
 CMD ["python", "main.py"]
