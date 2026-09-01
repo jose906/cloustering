@@ -17,4 +17,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Ejecutar el procesamiento cuando se inicie el Job
-CMD ["python", "main.py"]
+CMD ["python", "app.py"]

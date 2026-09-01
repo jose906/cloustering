@@ -600,7 +600,70 @@ def preparar_tweets_nuevo_topic(
 
 
 
+def ejecutar_procesamiento():
 
+    print("========================================")
+    print("INICIANDO PROCESAMIENTO DE NETVORA")
+    print("========================================")
+
+    df_no_asignados = classify_tweets()
+
+    if df_no_asignados is None or df_no_asignados.empty:
+        print("No hay tweets sin asignar.")
+        return
+
+    df_clusters = detectar_nuevos_clusters(df_no_asignados)
+
+    if df_clusters is None or df_clusters.empty:
+        print("No se pudieron detectar clusters.")
+        return
+
+    centroides_nuevos = calcular_centroides_nuevos(df_clusters)
+
+    if (
+        len(df_clusters.groupby("cluster")) < 5
+        and len(df_no_asignados) < 1000
+    ):
+        print("No hay suficientes datos para comparar nuevos tópicos.")
+        return
+
+    topics_existentes = get_topic_embeddings()
+
+    df_comparacion = comparar_centroides_con_topics(
+        centroides_nuevos,
+        topics_existentes,
+        umbral=UMBRAL
+    )
+
+    df_asignaciones_clusters = preparar_clusters_similares(
+        df_clusters,
+        df_comparacion
+    )
+
+    if not df_asignaciones_clusters.empty:
+        insert_tweets_topic(df_asignaciones_clusters)
+
+    df_topics_nuevos = df_comparacion[
+        df_comparacion["es_nuevo"] == True
+    ].copy()
+
+    topics_creados = crear_todos_los_topics_nuevos(
+        df_topics_nuevos=df_topics_nuevos,
+        centroides_nuevos=centroides_nuevos,
+        df_clusters=df_clusters
+    )
+
+    print("========================================")
+    print("PROCESAMIENTO TERMINADO")
+    print("Topics creados:", len(topics_creados))
+    print("========================================")
+
+
+if __name__ == "__main__":
+    ejecutar_procesamiento()
+
+
+"""
 
 if __name__ == "__main__":
     df_no_asignados = classify_tweets()
@@ -616,3 +679,6 @@ if __name__ == "__main__":
         insert_tweets_topic(df_asignaciones_clusters)
         df_topics_nuevos = df_comparacion[df_comparacion["es_nuevo"] == True].copy()
         topics_creados = crear_todos_los_topics_nuevos( df_topics_nuevos=df_topics_nuevos,centroides_nuevos=centroides_nuevos,   df_clusters=df_clusters)
+        
+        
+        """
