@@ -606,7 +606,7 @@ if __name__ == "__main__":
     df_no_asignados = classify_tweets()
     df_clusters = detectar_nuevos_clusters(df_no_asignados)
     centroides_nuevos = calcular_centroides_nuevos(df_clusters)
-    if len(df_clusters.groupby("cluster")) < 5 :
+    if len(df_clusters.groupby("cluster")) < 5 and len(df_no_asignados) < 1000:
         print("No hay centroides nuevos para comparar")
     else:
         topics_existentes = get_topic_embeddings()
