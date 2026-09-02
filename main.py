@@ -901,7 +901,7 @@ def ejecutar_procesamiento():
         print("No se pudieron detectar clusters.")
         return
 
-    clusters_validos = filtrar_clusters_por_calidad(df_clusters,similitud_minima=0.80, min_tweets=20)
+    clusters_validos = filtrar_clusters_por_calidad(df_clusters,similitud_minima=0.65, min_tweets=20)
 
     if len(clusters_validos) == 0:
         print("No se encontraron clusters con calidad suficiente")
