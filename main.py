@@ -922,10 +922,10 @@ def ejecutar_procesamiento():
     if not df_asignaciones_clusters.empty:
         insert_tweets_topic(df_asignaciones_clusters)
         
-    topics_actualizados = (df_asignaciones_clusters["topic_id"].drop_duplicates().tolist())
+        topics_actualizados = (df_asignaciones_clusters["topic_id"].drop_duplicates().tolist())
     
-    for topic_id in topics_actualizados:
-        recalcular_centroide_topic(int(topic_id))
+        for topic_id in topics_actualizados:
+            recalcular_centroide_topic(int(topic_id))
 
 
     df_topics_nuevos = df_comparacion[df_comparacion["es_nuevo"] == True].copy()
