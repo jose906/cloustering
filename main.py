@@ -889,6 +889,9 @@ def preparar_tweets_nuevo_topic(df_clusters,cluster_id,nuevo_topic_id,centroide)
     similitudes = cosine_similarity(embeddings_tweets,centroide_array).flatten()
 
     grupo["similarity"] = similitudes
+    grupo = grupo[
+    grupo["similarity"] >= 0.60
+    ].copy()
 
     return grupo[
         ["tweetid", "topic_id", "similarity"]
