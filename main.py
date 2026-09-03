@@ -638,6 +638,15 @@ def preparar_clusters_similares(df_clusters,df_comparacion,topics_existentes):
         tweet_embeddings = np.array(tweets_cluster["embedding"].tolist(),dtype=np.float32)
 
         similitudes_tweets = cosine_similarity(tweet_embeddings,topic_embedding).flatten()
+        
+        print(
+            f"Cluster {cluster_id} -> Topic {topic_id} | "
+            f"Tweets: {len(similitudes_tweets)} | "
+            f">=0.80: {np.sum(similitudes_tweets >= UMBRAL)} | "
+            f"Promedio: {np.mean(similitudes_tweets):.3f} | "
+            f"Máxima: {np.max(similitudes_tweets):.3f} | "
+            f"Mínima: {np.min(similitudes_tweets):.3f}"
+        )
 
         for j, (_, tweet) in enumerate(tweets_cluster.iterrows()):
 
