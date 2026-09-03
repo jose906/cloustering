@@ -14,8 +14,9 @@ from datetime import datetime
 
    
 
-UMBRAL = 0.8
+UMBRAL = 0.80
 UMBRAL_NUEVO_TOPIC = 0.80
+UMBRAL_TWEET_CLUSTER = 0.65
 
 
 DB_CONFIG = {
@@ -655,7 +656,7 @@ def preparar_clusters_similares(df_clusters,df_comparacion,topics_existentes):
 
             similitud_tweet = float(similitudes_tweets[j])
 
-            if similitud_tweet < UMBRAL:
+            if similitud_tweet < UMBRAL_TWEET_CLUSTER:
                 continue
 
             asignaciones.append({
