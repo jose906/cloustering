@@ -642,12 +642,15 @@ def preparar_clusters_similares(df_clusters,df_comparacion,topics_existentes):
         print(
             f"Cluster {cluster_id} -> Topic {topic_id} | "
             f"Tweets: {len(similitudes_tweets)} | "
-            f">=0.80: {np.sum(similitudes_tweets >= UMBRAL)} | "
+            f">=0.60: {np.sum(similitudes_tweets >= 0.60)} | "
+            f">=0.65: {np.sum(similitudes_tweets >= 0.65)} | "
+            f">=0.70: {np.sum(similitudes_tweets >= 0.70)} | "
+            f">=0.75: {np.sum(similitudes_tweets >= 0.75)} | "
+            f">=0.80: {np.sum(similitudes_tweets >= 0.80)} | "
             f"Promedio: {np.mean(similitudes_tweets):.3f} | "
             f"Máxima: {np.max(similitudes_tweets):.3f} | "
             f"Mínima: {np.min(similitudes_tweets):.3f}"
         )
-
         for j, (_, tweet) in enumerate(tweets_cluster.iterrows()):
 
             similitud_tweet = float(similitudes_tweets[j])
