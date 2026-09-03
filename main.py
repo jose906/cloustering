@@ -916,6 +916,10 @@ def ejecutar_procesamiento():
     topics_existentes = get_topic_embeddings()
 
     df_comparacion = comparar_centroides_con_topics(centroides_nuevos,topics_existentes,umbral=UMBRAL_NUEVO_TOPIC)
+    print("--------------------------------")
+    print("COMPARACIÓN CLUSTERS VS TOPICS")
+    print(df_comparacion.to_string(index=False))
+    print("--------------------------------")
 
     df_asignaciones_clusters = preparar_clusters_similares(df_clusters,df_comparacion,topics_existentes)
 
