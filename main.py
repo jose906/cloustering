@@ -823,7 +823,7 @@ def crear_todos_los_topics_nuevos(df_topics_nuevos,centroides_nuevos,df_clusters
 
                         similitud = float(similitudes[j])
 
-                        if similitud < UMBRAL:
+                        if similitud < UMBRAL_TWEET_CLUSTER:
                             continue
 
                         asignaciones.append({
