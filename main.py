@@ -59,14 +59,7 @@ DB_CONFIG = {
     "charset": "utf8mb4",
     "port": "3306",
 }
-DB_CONFIG_LOCAL = {
-    "user": "admin",
-    "password": "Admin123!",
-    "database": "Analisis",
-    "host": "34.69.57.221",
-    "port": "3306",
-    "charset": "utf8mb4",
-}
+
 
 TOPICS_ESPECIALES = [
     "__SOLO_LINK__",
@@ -80,7 +73,7 @@ TOPICS_ESPECIALES = [
 
 def get_db_connection():
 
-    return mysql.connector.connect(**DB_CONFIG_LOCAL)
+    return mysql.connector.connect(**DB_CONFIG)
 
 
 def get_topic_embeddings():
