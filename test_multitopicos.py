@@ -48,7 +48,7 @@ class ClasificacionMultipleTests(unittest.TestCase):
         with ExitStack() as contexto:
             if maximo is not None:
                 contexto.enter_context(patch.object(main, "MAX_TOPICS_PER_TWEET", maximo))
-            contexto.enter_context(patch.object(main, "SECONDARY_TOPIC_THRESHOLD", 0.85))
+            contexto.enter_context(patch.object(main, "SECONDARY_TOPIC_THRESHOLD", 0.84))
             contexto.enter_context(patch.object(main, "get_referencias_topics", return_value=self.referencias))
             contexto.enter_context(redirect_stdout(io.StringIO()))
             return main.clasificar_lote(tweets, self.topics, {"__RESUMEN__": 500})
@@ -97,8 +97,13 @@ class ClasificacionMultipleTests(unittest.TestCase):
 
     def test_secundario_requiere_referencias_y_umbral(self):
         self.referencias.pop(180)
-        self.topics[2]["embedding"] = vector(0.84, 3)
-        self.comprobar(f"{SUBVENCION}. {BLOQUEOS}. {DOLAR}.", [176])
+        texto = f"{SUBVENCION}. {BLOQUEOS}. {DOLAR}."
+        self.topics[2]["embedding"] = vector(0.839, 3)
+        self.comprobar(texto, [176])
+
+        self.topics[2]["embedding"] = vector(0.845, 3)
+        self.referencias[99] = np.tile(vector(0.825, 3), (10, 1))
+        self.comprobar(texto, [176, 99])
 
     def test_conserva_el_margen_con_limite_de_un_topico(self):
         self.referencias[180] = self.referencias[176]
