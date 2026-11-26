@@ -134,6 +134,17 @@ class PersistenciaMultipleTests(unittest.TestCase):
             columns=["topic_id", "tweetid", "similarity"],
         )
 
+    def test_consulta_pendientes_en_14_y_30_dias(self):
+        self.cursor.fetchall.side_effect = [[], []]
+        with patch.object(main, "get_db_connection", return_value=self.connection):
+            main.get_tweet_embedding()
+            main.get_tweet_embedding(dias=30)
+        consultas = self.cursor.execute.call_args_list
+        self.assertEqual([consulta.args[1] for consulta in consultas], [(14,), (30,)])
+        for consulta in consultas:
+            self.assertIn("WHERE tt.tweetid IS NULL", consulta.args[0])
+            self.assertIn("INTERVAL %s DAY", consulta.args[0])
+
     def test_incremental_en_orden_reintento_y_conteo_por_topico(self):
         with patch.object(main, "get_db_connection", return_value=self.connection):
             self.assertEqual(main.insert_tweets_topic(self.asignaciones), {180})

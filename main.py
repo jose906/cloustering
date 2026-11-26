@@ -24,6 +24,7 @@ APOYO_MINIMO_FUSION = 0.70
 MIN_TWEETS_CLUSTER = 38
 MIN_TEXTOS_UNICOS_CLUSTER = 28
 SIMILITUD_MINIMA_MIEMBRO = 0.69
+VENTANAS_DIAS = (14, 30)
 
 UMBRAL_CANDIDATO = 0.65
 CANDIDATOS_POR_TWEET = 2
@@ -106,7 +107,7 @@ def get_topic_embeddings():
     return topics
 
 
-def get_tweet_embedding():
+def get_tweet_embedding(dias=VENTANAS_DIAS[0]):
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
 
@@ -121,11 +122,11 @@ def get_tweet_embedding():
         LEFT JOIN topic_tweets tt
             ON t.tweetid = tt.tweetid
         WHERE tt.tweetid IS NULL
-          AND t.created >= NOW() - INTERVAL 14 DAY
+          AND t.created >= NOW() - INTERVAL %s DAY
         ORDER BY t.created, t.tweetid, e.id_embedding
     """
 
-    cursor.execute(query)
+    cursor.execute(query, (dias,))
     results = cursor.fetchall()
 
     cursor.close()
@@ -1185,7 +1186,7 @@ def crear_todos_los_topics_nuevos(
     return resultados
 
 
-def ejecutar_procesamiento(simular=True):
+def ejecutar_procesamiento(simular=True, dias=VENTANAS_DIAS[0]):
 
     print("=" * 70)
     print("NETVORA - PROCESAMIENTO DE TOPICOS")
@@ -1195,12 +1196,13 @@ def ejecutar_procesamiento(simular=True):
         "MODO:",
         "SIMULACION" if simular else "PRODUCCION"
     )
+    print(f"Ventana de búsqueda: últimos {dias} días")
 
     # ==========================================
     # 1. OBTENER DATOS
     # ==========================================
 
-    tweets = get_tweet_embedding()
+    tweets = get_tweet_embedding(dias)
 
     if not tweets:
         print("No hay tweets nuevos.")
@@ -1601,4 +1603,5 @@ def evaluar_novedad_cluster(grupo, topics_existentes):
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         raise SystemExit("Ejecuta main.py sin argumentos.")
-    ejecutar_procesamiento(simular=False)
+    for dias in VENTANAS_DIAS:
+        ejecutar_procesamiento(simular=False, dias=dias)
